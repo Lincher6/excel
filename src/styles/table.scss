@@ -15,8 +15,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            width: $row-info-width;
-            background-color: #f8f9fa;
+            min-width: $row-info-width;
+            background-color: #d5e2f0;
             border-bottom: 1px solid $border-color;
             border-right: 1px solid $border-color;
         }
@@ -26,18 +26,17 @@
             align-items: center;
             width: $cell-width;
             height: $cell-height;
-            background-color: #f8f9fa;
+            background-color: #d5e2f0;
             border-bottom: 1px solid $border-color;
             border-right: 1px solid $border-color;
         }
         .data {
             display: flex;
             .cell {
+                padding: 2px;
                 outline: none;
-                display: flex;
-                align-items: center;
                 width: $cell-width;
-                height: $cell-height;
+                min-height: $cell-height;
                 border-bottom: 1px solid $border-color;
                 border-right: 1px solid $border-color;
                 &.selected {
