@@ -34,6 +34,20 @@ class Dom {
         return this.$element.getBoundingClientRect()
     }
 
+    getAll(selector) {
+        return this.$element.querySelectorAll(selector)
+    }
+
+    get data() {
+        return this.$element.dataset
+    }
+
+    css(styles = {}) {
+        Object.keys(styles).forEach(styleType => {
+            this.$element.style[styleType] = styles[styleType]
+        })
+    }
+
     append(node) {
         if (node instanceof Dom) {
             node = node.$element

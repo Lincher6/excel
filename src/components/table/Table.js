@@ -1,6 +1,7 @@
 import { ExcelComponent } from "@core/ExcelComponent";
 import {createTable} from "@/components/table/table.createTable";
 import {$} from "@core/dom";
+import {getThrottleFunction} from "@core/utils";
 
 export class Table extends ExcelComponent {
     constructor($element) {
@@ -21,12 +22,23 @@ export class Table extends ExcelComponent {
             const resizer = $(e.target)
             const parent = resizer.closest('[data-type="resizable"]')
             const coords = parent.getCoords()
+            const cells = this.$element.getAll(`[data-col="${parent.data.col}"`)
+            const type = resizer.data.resize
 
-            document.onmousemove = e => {
-                const delta = e.pageX - coords.right
-                const width = delta + coords.width
-                parent.$element.style.width = width + 'px'
-            }
+            document.onmousemove = getThrottleFunction(e => {
+                console.log(1)
+                if (type === 'col') {
+                    const delta = e.pageX - coords.right
+                    const width = delta + coords.width
+                    parent.css({width: width + 'px'})
+                    cells.forEach(cell => { cell.style.width = width + 'px' })
+                } else {
+                    const delta = e.pageY - coords.bottom
+                    const height = delta + coords.height
+                    parent.css({height: height + 'px'})
+                }
+
+            }, 20)
 
             document.onmouseup = () => {
                 document.onmousemove = null
