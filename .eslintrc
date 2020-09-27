@@ -20,7 +20,8 @@
     "no-trailing-spaces": "off",
     "brace-style": "off",
     "block-spacing": "off",
-    "max-len": "off"
+    "max-len": "off",
+    "no-invalid-this": "off"
   },
   "extends": [
     "eslint:recommended",

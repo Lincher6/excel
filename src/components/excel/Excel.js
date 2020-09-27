@@ -1,4 +1,4 @@
-import { $ } from "@core/dom"
+ import { $ } from "@core/dom"
 
 export class Excel {
     constructor(selector, options) {
@@ -11,6 +11,9 @@ export class Excel {
         this.components = this.components.map(Component => {
             const $element = $.create('div', Component.className)
             const component = new Component($element)
+            if (component.name) {
+                window[`c${component.name}`] = component
+            }
             $element.html(component.toHTML())
             $root.append($element)
             return component

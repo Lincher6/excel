@@ -15,7 +15,14 @@ export class DomListener {
             if (!this[method]) {
                 throw new Error(`Method ${method} is not implemented in ${this.name} component`)
             }
-            this.$element.on(listener, this[getMethodName(listener)])
+            this.$element.on(listener, this[method])
+        })
+    }
+
+    removeDOMListeners() {
+        this.listeners.forEach(listener => {
+            const method = getMethodName(listener)
+            this.$element.off(listener, this[method])
         })
     }
 

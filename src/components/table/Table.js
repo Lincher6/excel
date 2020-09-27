@@ -1,55 +1,24 @@
 import { ExcelComponent } from "@core/ExcelComponent";
+import {createTable} from "@/components/table/table.createTable.js";
+import {resize, shouldResize} from "@/components/table/table.resize";
 
 export class Table extends ExcelComponent {
     constructor($element) {
-        super($element)
+        super($element, {
+            name: "table",
+            listeners: ['mousedown']
+        })
     }
 
     static className = 'excel__table'
 
     toHTML() {
-        return `
-            <div class="row">
+        return createTable()
+    }
 
-                <div class="row-info">
-
-                </div>
-
-                <div class="data">
-
-                    <div class="column-info">
-                        A
-                    </div>
-                    <div class="column-info">
-                        B
-                    </div>
-                    <div class="column-info">
-                        C
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="row">
-
-                <div class="row-info">
-                    1
-                </div>
-
-                <div class="data">
-                    <div class="cell selected" contenteditable>
-                        abc
-                    </div>
-                    <div class="cell" contenteditable>
-                        abc
-                    </div>
-                    <div class="cell" contenteditable>
-                        abc
-                    </div>
-                </div>
-
-            </div>
-        `
+    onMousedown = e => {
+        if (shouldResize(e)) {
+            resize(this.$element, e)
+        }
     }
 }
