@@ -3,26 +3,31 @@ const CODES = {
     Z: 90
 }
 
-const createCell = () => {
+const createCell = (_, index) => {
     return `
-        <div class="cell" contentEditable/>
+        <div class="cell" contentEditable data-col="${index}">
             
         </div>
     `
 }
 
-const createColumn = (data) => {
+const createColumn = (data, index) => {
     return `
-        <div class="column-info">
+        <div class="column-info" data-type="resizable" data-col="${index}" >
             ${data}
+            <div class="col-resize" data-resize="col"></div>
         </div>
     `
 }
 
 const createRow = (index, data) => {
+    const resize = index ? `<div class="row-resize" data-resize="row"></div>` : ''
     return `
-        <div class="row">
-            <div class="row-info">${index ? index : ''}</div>
+        <div class="row" >
+            <div class="row-info" data-type="resizable">
+                ${index ? index : ''}
+                ${resize}
+            </div>
             <div class="data">${data}</div>
         </div>
     `
@@ -30,7 +35,7 @@ const createRow = (index, data) => {
 
 const codeToChar = (_, index) => String.fromCharCode(CODES.A + index)
 
-export const createTable = (rowsCount = 15) => {
+export const createTable = (rowsCount = 30) => {
     const columnsCount = CODES.Z - CODES.A + 1
     const rows = []
 
