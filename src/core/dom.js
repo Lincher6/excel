@@ -34,6 +34,10 @@ class Dom {
         return this.$element.getBoundingClientRect()
     }
 
+    get(selector) {
+        return $(this.$element.querySelector(selector))
+    }
+
     getAll(selector) {
         return this.$element.querySelectorAll(selector)
     }
@@ -46,6 +50,41 @@ class Dom {
         Object.keys(styles).forEach(styleType => {
             this.$element.style[styleType] = styles[styleType]
         })
+    }
+
+    focus() {
+        this.$element.focus()
+        return this
+    }
+
+    text(text) {
+        if (typeof text === 'string') {
+            this.$element.textContent = text
+            return this
+        }
+        if (this.$element.tagName.toLowerCase() === 'input') {
+            return this.$element.value.trim()
+        }
+        return this.$element.textContent.trim()
+
+    }
+
+    addClass(className) {
+        this.$element.classList.add(className)
+        return this
+    }
+
+    removeClass(className) {
+        this.$element.classList.remove(className)
+        return this
+    }
+
+    id(parse) {
+        if (parse) {
+            const [row, col] = this.id().split(':')
+            return { row: +row, col: +col }
+        }
+        return this.data.id
     }
 
     append(node) {

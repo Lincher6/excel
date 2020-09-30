@@ -17,6 +17,7 @@
             justify-content: center;
             align-items: center;
             min-width: $row-info-width;
+            min-height: $cell-height;
             background-color: #d5e2f0;
             border-bottom: 1px solid $border-color;
             border-right: 1px solid $border-color;
@@ -46,6 +47,7 @@
                 border-right: 1px solid $border-color;
                 &.selected {
                     outline: 2px solid $primary-color;
+                    z-index: 100;
                     
                 }
             }
