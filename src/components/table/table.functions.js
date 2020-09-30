@@ -1,5 +1,6 @@
 import {range} from "@core/utils";
 import {$} from '@core/dom'
+// new staff
 
 export const isCell = (element) => {
     return element.data.type === 'cell'
