@@ -8,6 +8,7 @@ export const resize = ($element, e) => {
     const cells = $element.getAll(`[data-col="${parent.data.col}"`)
     const type = resizer.data.resize
     const cssType = type === 'col' ? 'bottom' : 'right'
+    let value
 
     resizer.css({
         opacity: 1,
@@ -17,13 +18,13 @@ export const resize = ($element, e) => {
     document.onmousemove = getThrottleFunction(e => {
         if (type === 'col') {
             const delta = e.pageX - coords.right
-            const width = delta + coords.width
-            parent.css({width: width + 'px'})
-            cells.forEach(cell => { cell.style.width = width + 'px' })
+            value = delta + coords.width
+            parent.css({width: value + 'px'})
+            cells.forEach(cell => { cell.style.width = value + 'px' })
         } else {
             const delta = e.pageY - coords.bottom
-            const height = delta + coords.height
-            parent.css({height: height + 'px'})
+            value = delta + coords.height
+            parent.css({minHeight: value + 'px'})
         }
 
     }, 10)
@@ -31,6 +32,7 @@ export const resize = ($element, e) => {
     document.onmouseup = () => {
         document.onmousemove = null
         document.onmouseup = null
+
         resizer.css({
             opacity: 0,
             [cssType]: 0
