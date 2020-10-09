@@ -61,6 +61,7 @@ export class Table extends ExcelComponent {
     }
 
     onKeydown = e => {
+
         const keys = [
             'Enter',
             'Tab',
