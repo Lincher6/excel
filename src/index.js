@@ -6,12 +6,18 @@ import { Table } from '@/components/table/Table'
 import './styles/index.scss'
 import {createStore} from "@core/createStore";
 import {rootReducer} from "@/store/rootReducer";
+import {storage} from "@core/utils";
+import {initialState} from "@/store/initialState";
 
-const store = createStore(rootReducer)
+const store = createStore(rootReducer, initialState)
 
 const excel = new Excel('#app', {
     components: [Header, Toolbar, Formula, Table],
     store
+})
+
+store.subscribe(state => {
+    storage('data', state)
 })
 
 excel.render()

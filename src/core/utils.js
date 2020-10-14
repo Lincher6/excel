@@ -15,6 +15,13 @@ export const range = (start, end) => {
         .map((_, index) => start + index)
 }
 
+export const storage = (key, value) => {
+    if (value) {
+        localStorage.setItem(key, JSON.stringify(value))
+    }
+    return JSON.parse(localStorage.getItem(key))
+}
+
 export const getThrottleFunction = (func, delay) => {
     let timerId
 

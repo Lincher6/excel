@@ -3,37 +3,54 @@ const CODES = {
     Z: 90
 }
 
-const createCells = (row) => {
-    return (_, col) => {
+const DEFAULT_WIDTH = 80
+const DEFAULT_HEIGHT = 20
 
+const createCell = (row, state) => {
+    return (_, col) => {
+        const width = (state.tableCols[col] || DEFAULT_WIDTH) + 'px'
+        const id = `${row}:${col}`
+        const value = state.tableData[id] || ''
         return `
             <div 
                 class="cell" 
                 contentEditable
                 data-col="${col}"
                 data-type="cell"
-                data-id="${row}:${col}"
+                data-id="${id}"
+                style="width: ${width}"
             >
-               
+               ${value}
             </div>
     `
     }
 }
 
-const createColumn = (data, index) => {
+const createColumn = ({data, index, width}) => {
     return `
-        <div class="column-info" data-type="resizable" data-col="${index}" >
+        <div 
+            class="column-info" 
+            data-type="resizable" 
+            data-col="${index}"
+            style="width: ${width}"
+        >
             ${data}
             <div class="col-resize" data-resize="col"></div>
         </div>
     `
 }
 
-const createRow = (index, data) => {
+const createRow = (index, data, resizedRows = {}) => {
     const resize = index ? `<div class="row-resize" data-resize="row"></div>` : ''
+    const height = (resizedRows[index] || DEFAULT_HEIGHT) + 'px'
     return `
         <div class="row" >
-            <div class="row-info" data-type="resizable">
+            <div 
+                class="row-info" 
+                data-type="resizable" 
+                data-row="${index}"
+                style="height: ${height}"
+            >
                 ${index ? index : ''}
                 ${resize}
             </div>
@@ -44,13 +61,24 @@ const createRow = (index, data) => {
 
 const codeToChar = (_, index) => String.fromCharCode(CODES.A + index)
 
-export const createTable = (rowsCount = 50) => {
+const withColsWidth = (resizedCols) => {
+    return (data, index) => ({
+        data,
+        index,
+        width: resizedCols[index] + 'px'
+    })
+}
+
+export const createTable = (state, rowsCount = 50) => {
     const columnsCount = CODES.Z - CODES.A + 1
     const rows = []
+    const resizedCols = state.tableCols
+    const resizedRows = state.tableRows
 
     const infoCollumns = new Array(columnsCount)
         .fill('')
         .map(codeToChar)
+        .map(withColsWidth(resizedCols))
         .map(createColumn)
         .join('')
 
@@ -59,9 +87,9 @@ export const createTable = (rowsCount = 50) => {
     for (let row = 0; row < rowsCount; row++) {
         const cells = new Array(columnsCount)
             .fill('')
-            .map(createCells(row))
+            .map(createCell(row, state))
             .join('')
-        rows.push(createRow(row + 1, cells))
+        rows.push(createRow(row + 1, cells, resizedRows))
     }
 
     return rows.join('')

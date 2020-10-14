@@ -1,9 +1,11 @@
 import { ExcelComponent } from "@core/ExcelComponent";
 import {createTable} from "@/components/table/table.template.js";
-import {resize, shouldResize} from "@/components/table/table.resize";
+import {resizeHandler, shouldResize} from "@/components/table/table.resize";
 import {TableSelection} from "@/components/table/TableSelection";
 import {isCell, matrix, nextSelected} from "@/components/table/table.functions";
 import {$} from "@core/dom";
+import * as actions from '@/store/actions'
+import {changeInput} from "@/store/actions";
 
 export class Table extends ExcelComponent {
     constructor($element, options) {
@@ -17,7 +19,7 @@ export class Table extends ExcelComponent {
     static className = 'excel__table'
 
     toHTML() {
-        return createTable()
+        return createTable(this.store.getState())
     }
 
     prepare() {
@@ -31,6 +33,7 @@ export class Table extends ExcelComponent {
 
         this.$on('formula:input', text => {
             this.selection.current.text(text)
+            this.changeInput(text)
         })
 
         this.$on('formula:enter', () => {
@@ -43,9 +46,14 @@ export class Table extends ExcelComponent {
         this.$emit('table:select', cell)
     }
 
+    resize = async e => {
+        const data = await resizeHandler(this.$element, e)
+        this.dispatch(actions.createTable(data))
+    }
+
     onMousedown = e => {
         if (shouldResize(e)) {
-            resize(this.$element, e)
+            this.resize(e)
         }
         const target = $(e.target)
         if (isCell(target)) {
@@ -79,7 +87,14 @@ export class Table extends ExcelComponent {
         }
     }
 
+    changeInput = (value) => {
+        this.dispatch(changeInput({
+            id: this.selection.current.id(),
+            value
+        }))
+    }
+
     onInput = e => {
-        this.$emit('table:input', $(e.target))
+        this.changeInput($(e.target).text())
     }
 }

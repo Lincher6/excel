@@ -1,5 +1,5 @@
 export const createStore = (rootReducer, initialState = {}) => {
-    const state = rootReducer(initialState, { type: '__INIT__' })
+    let state = rootReducer(initialState, { type: '__INIT__' })
     const listeners = []
 
     return {
@@ -13,11 +13,11 @@ export const createStore = (rootReducer, initialState = {}) => {
         },
 
         dispatch(action) {
-            rootReducer(state, action)
-            listeners.forEach(listener => listener())
+            state = rootReducer(state, action)
+            listeners.forEach(listener => listener(state))
         },
 
-        getSTate() {
+        getState() {
             return state
         }
     }
