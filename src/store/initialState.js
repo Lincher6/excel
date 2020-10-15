@@ -3,7 +3,7 @@ import {storage} from "@core/utils";
 const defaultState = {
     tableCols: {},
     tableRows: {},
-    currentState: '',
+    currentValue: '',
     tableData: {}
 }
 

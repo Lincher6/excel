@@ -6,6 +6,7 @@ export class ExcelComponent extends DomListener {
         this.name = options.name || ''
         this.emitter = options.emitter
         this.store = options.store
+        this.subscribes = options.subscribes || []
         this.unsubscribers = []
         this.prepare()
     }
@@ -42,5 +43,9 @@ export class ExcelComponent extends DomListener {
     destroy() {
         this.removeDOMListeners()
         this.unsubscribers.forEach(unsub => unsub())
+    }
+
+    isWatching(key) {
+        return this.subscribes.includes(key)
     }
 }

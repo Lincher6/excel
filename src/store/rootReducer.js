@@ -16,7 +16,7 @@ export const rootReducer = (state, action) => {
             prevState[data.id] = data.value
             return {
                 ...state,
-                currentText: data.value,
+                currentValue: data.value,
                 tableData: prevState
             }
         }
