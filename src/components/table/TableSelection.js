@@ -26,7 +26,12 @@ export class TableSelection {
         elements.forEach(element => {
             element.addClass(TableSelection.className)
         })
+    }
 
+    addStyles(styles) {
+        this.group.forEach(element => {
+            element.css(styles)
+        })
     }
 
 }

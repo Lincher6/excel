@@ -6,6 +6,7 @@ import {isCell, matrix, nextSelected} from "@/components/table/table.functions";
 import {$} from "@core/dom";
 import * as actions from '@/store/actions'
 import {changeInput} from "@/store/actions";
+import {defaultStyles} from "@/constants";
 
 export class Table extends ExcelComponent {
     constructor($element, options) {
@@ -39,11 +40,17 @@ export class Table extends ExcelComponent {
         this.$on('formula:enter', () => {
             this.selection.current.focus()
         })
+
+        this.$on('toolbar:button', (styles) => {
+            this.selection.addStyles(styles)
+        })
     }
 
     selectCell = cell => {
         this.selection.select(cell)
         this.$emit('table:select', cell)
+
+        console.log(cell.getStyles(Object.keys(defaultStyles)))
     }
 
     resize = async e => {

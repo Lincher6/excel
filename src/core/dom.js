@@ -52,6 +52,13 @@ class Dom {
         })
     }
 
+    getStyles(styles = []) {
+        return styles.reduce((acc, key) => {
+            acc[key] = this.$element.style[key]
+            return acc
+        }, {})
+    }
+
     focus() {
         this.$element.focus()
         return this
