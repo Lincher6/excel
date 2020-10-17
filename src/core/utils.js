@@ -73,7 +73,6 @@ export const parse = value => {
         catch (e) {
             return value
         }
-
     }
     return value
 }
