@@ -5,8 +5,9 @@ import {TableSelection} from "@/components/table/TableSelection";
 import {isCell, matrix, nextSelected} from "@/components/table/table.functions";
 import {$} from "@core/dom";
 import * as actions from '@/store/actions'
-import {changeInput} from "@/store/actions";
+import {applyStyles, changeInput, changeStyles} from "@/store/actions";
 import {defaultStyles} from "@/constants";
+import {parse} from "@core/utils";
 
 export class Table extends ExcelComponent {
     constructor($element, options) {
@@ -32,9 +33,11 @@ export class Table extends ExcelComponent {
         const initialCell = this.$element.get('[data-id="0:0"]')
         this.selectCell(initialCell)
 
-        this.$on('formula:input', text => {
-            this.selection.current.text(text)
-            this.changeInput(text)
+        this.$on('formula:input', value => {
+            this.selection.current
+                .attr('data-value', value)
+                .text(parse(value))
+            this.changeInput(value)
         })
 
         this.$on('formula:enter', () => {
@@ -43,6 +46,7 @@ export class Table extends ExcelComponent {
 
         this.$on('toolbar:button', (styles) => {
             this.selection.addStyles(styles)
+            this.dispatch(applyStyles( this.selection.ids(), styles))
         })
     }
 
@@ -50,7 +54,9 @@ export class Table extends ExcelComponent {
         this.selection.select(cell)
         this.$emit('table:select', cell)
 
-        console.log(cell.getStyles(Object.keys(defaultStyles)))
+        const styles = cell.getStyles(Object.keys(defaultStyles))
+        this.dispatch(changeStyles(styles))
+
     }
 
     resize = async e => {

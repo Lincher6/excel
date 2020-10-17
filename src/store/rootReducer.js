@@ -1,4 +1,4 @@
-import {CHANGE_INPUT, CREATE_TABLE} from "@/store/types";
+import {APPLY_STYLES, CHANGE_INPUT, CHANGE_STYLES, CHANGE_TITLE, CREATE_TABLE} from "@/store/types";
 
 export const rootReducer = (state, action) => {
     switch (action.type) {
@@ -19,6 +19,23 @@ export const rootReducer = (state, action) => {
                 currentValue: data.value,
                 tableData: prevState
             }
+        }
+
+        case CHANGE_STYLES: {
+            return { ...state, currentStyles: action.payload}
+        }
+
+        case APPLY_STYLES: {
+            const {ids, value} = action.payload
+            const newStyles = { ...state.stylesData }
+            ids.forEach(id => {
+                newStyles[id] = { ...state.stylesData[id], ...value }
+            })
+            return { ...state, currentStyles: value, stylesData: newStyles }
+        }
+
+        case CHANGE_TITLE: {
+            return { ...state, title: action.payload}
         }
 
         default: return state

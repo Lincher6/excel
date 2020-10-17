@@ -34,4 +34,8 @@ export class TableSelection {
         })
     }
 
+    ids() {
+        return this.group.map(element => element.id())
+    }
+
 }
