@@ -1,9 +1,13 @@
 import { ExcelComponent } from "@core/ExcelComponent";
 import {createTable} from "@/components/table/table.template.js";
-import {resize, shouldResize} from "@/components/table/table.resize";
+import {resizeHandler, shouldResize} from "@/components/table/table.resize";
 import {TableSelection} from "@/components/table/TableSelection";
 import {isCell, matrix, nextSelected} from "@/components/table/table.functions";
 import {$} from "@core/dom";
+import * as actions from '@/store/actions'
+import {applyStyles, changeInput, changeStyles} from "@/store/actions";
+import {defaultStyles} from "@/constants";
+import {parse} from "@core/utils";
 
 export class Table extends ExcelComponent {
     constructor($element, options) {
@@ -17,7 +21,7 @@ export class Table extends ExcelComponent {
     static className = 'excel__table'
 
     toHTML() {
-        return createTable()
+        return createTable(this.store.getState())
     }
 
     prepare() {
@@ -29,23 +33,40 @@ export class Table extends ExcelComponent {
         const initialCell = this.$element.get('[data-id="0:0"]')
         this.selectCell(initialCell)
 
-        this.$on('formula:input', text => {
-            this.selection.current.text(text)
+        this.$on('formula:input', value => {
+            this.selection.current
+                .attr('data-value', value)
+                .text(parse(value))
+            this.changeInput(value)
         })
 
         this.$on('formula:enter', () => {
             this.selection.current.focus()
+        })
+
+        this.$on('toolbar:button', (styles) => {
+            this.selection.addStyles(styles)
+            this.dispatch(applyStyles( this.selection.ids(), styles))
         })
     }
 
     selectCell = cell => {
         this.selection.select(cell)
         this.$emit('table:select', cell)
+
+        const styles = cell.getStyles(Object.keys(defaultStyles))
+        this.dispatch(changeStyles(styles))
+
+    }
+
+    resize = async e => {
+        const data = await resizeHandler(this.$element, e)
+        this.dispatch(actions.createTable(data))
     }
 
     onMousedown = e => {
         if (shouldResize(e)) {
-            resize(this.$element, e)
+            this.resize(e)
         }
         const target = $(e.target)
         if (isCell(target)) {
@@ -61,6 +82,7 @@ export class Table extends ExcelComponent {
     }
 
     onKeydown = e => {
+
         const keys = [
             'Enter',
             'Tab',
@@ -78,7 +100,14 @@ export class Table extends ExcelComponent {
         }
     }
 
+    changeInput = (value) => {
+        this.dispatch(changeInput({
+            id: this.selection.current.id(),
+            value
+        }))
+    }
+
     onInput = e => {
-        this.$emit('table:input', $(e.target))
+        this.changeInput($(e.target).text())
     }
 }

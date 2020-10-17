@@ -1,17 +1,21 @@
  import { $ } from "@core/dom"
  import {Emitter} from "@core/Emitter";
+ import {StoreSubscriber} from "@/store/StoreSubscriber";
 
 export class Excel {
     constructor(selector, options) {
         this.$appElement = $(selector)
         this.components = options.components || []
         this.emitter = new Emitter()
+        this.storeSubscriber = new StoreSubscriber(options.store)
+        this.store = options.store
     }
 
     getRoot() {
         const $root = $.create('div', 'excel')
         const options = {
-            emitter: this.emitter
+            emitter: this.emitter,
+            store: this.store
         }
 
         this.components = this.components.map(Component => {
@@ -31,6 +35,7 @@ export class Excel {
     render() {
         this.$appElement.append(this.getRoot())
         this.components.forEach(component => { component.init() })
+        this.storeSubscriber.subscribeComponents(this.components)
     }
 
     destroy() {

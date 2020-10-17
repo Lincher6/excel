@@ -1,3 +1,4 @@
+
 export const capitalize = (staring) => {
     if (typeof staring !== 'string') {
         return ''
@@ -15,18 +16,64 @@ export const range = (start, end) => {
         .map((_, index) => start + index)
 }
 
-export const getThrottleFunction = (func, delay) => {
-    let timerId
+export const storage = (key, value) => {
+    if (value) {
+        localStorage.setItem(key, JSON.stringify(value))
+    }
+    return JSON.parse(localStorage.getItem(key))
+}
 
-    return (...e) => {
-        if (!timerId) {
-            func(...e)
-            timerId = setTimeout(() => {
-                timerId = undefined;
+export const getThrottleFunction = (fn, delay) => {
+    let timer
+
+    return (...args) => {
+        if (!timer) {
+            fn(...args)
+            timer = setTimeout(() => {
+                timer = undefined;
             }, delay)
         }
+    }
+}
 
+export const debounce = (fn, delay) => {
+    let timer
+
+    return (...args) => {
+        clearTimeout(timer)
+        setTimeout(() => {
+            fn(...args)
+            clearTimeout(timer)
+        }, delay)
+    }
+}
+
+export const isEqual = (a, b) => {
+    if (typeof a === 'object' && typeof b === 'object') {
+        return JSON.stringify(a) === JSON.stringify(b)
+    }
+    return a === b
+}
+
+export const toDashCase = string => {
+    return string.replace(/([A-Z])/g, (g) => `-${g[0].toLowerCase()}`)
+}
+
+export const toInlineStyles = (styles = {}) => {
+    return Object.keys(styles).map(key => {
+        return `${[toDashCase(key)]}: ${styles[key]}`
+    }).join('; ')
+}
+
+export const parse = value => {
+    if (value.startsWith('=')) {
+        try {
+            return eval(value.slice(1))
+        }
+        catch (e) {
+            return value
+        }
 
     }
-
+    return value
 }

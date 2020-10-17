@@ -52,13 +52,20 @@ class Dom {
         })
     }
 
+    getStyles(styles = []) {
+        return styles.reduce((acc, key) => {
+            acc[key] = this.$element.style[key]
+            return acc
+        }, {})
+    }
+
     focus() {
         this.$element.focus()
         return this
     }
 
     text(text) {
-        if (typeof text === 'string') {
+        if (typeof text !== 'undefined') {
             this.$element.textContent = text
             return this
         }
@@ -67,6 +74,11 @@ class Dom {
         }
         return this.$element.textContent.trim()
 
+    }
+
+    attr(name, value) {
+        this.$element.setAttribute(name, value)
+        return this
     }
 
     addClass(className) {
