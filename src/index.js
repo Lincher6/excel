@@ -8,8 +8,11 @@ import {createStore} from "@core/createStore";
 import {rootReducer} from "@/store/rootReducer";
 import {debounce, storage} from "@core/utils";
 import {initialState} from "@/store/initialState";
+import {Router} from "@core/Routes/Router";
 
 const store = createStore(rootReducer, initialState)
+
+new Router('#root', [])
 
 const excel = new Excel('#app', {
     components: [Header, Toolbar, Formula, Table],
