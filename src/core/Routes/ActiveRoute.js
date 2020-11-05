@@ -5,7 +5,7 @@ export class ActiveRoute {
         return window.location.hash.slice(1)
     }
 
-    static get param() {
+    static get params() {
         return ActiveRoute.path.split('/')
     }
 }
