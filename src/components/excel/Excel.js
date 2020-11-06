@@ -1,10 +1,11 @@
  import { $ } from "@core/dom"
  import {Emitter} from "@core/Emitter";
  import {StoreSubscriber} from "@/store/StoreSubscriber";
+ import {updateDate} from "@/store/actions";
+ import {preventDefault} from "@core/utils";
 
 export class Excel {
-    constructor(selector, options) {
-        this.$appElement = $(selector)
+    constructor(options) {
         this.components = options.components || []
         this.emitter = new Emitter()
         this.storeSubscriber = new StoreSubscriber(options.store)
@@ -32,8 +33,12 @@ export class Excel {
         return $root
     }
 
-    render() {
-        this.$appElement.append(this.getRoot())
+    init() {
+        if (process.env.NODE_ENV === 'production') {
+            document.addEventListener('contextmenu', preventDefault)
+        }
+
+        this.store.dispatch(updateDate())
         this.components.forEach(component => { component.init() })
         this.storeSubscriber.subscribeComponents(this.components)
     }

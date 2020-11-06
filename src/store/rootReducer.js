@@ -1,4 +1,4 @@
-import {APPLY_STYLES, CHANGE_INPUT, CHANGE_STYLES, CHANGE_TITLE, CREATE_TABLE} from "@/store/types";
+import {APPLY_STYLES, CHANGE_INPUT, CHANGE_STYLES, CHANGE_TITLE, CREATE_TABLE, UPDATE_DATE} from "@/store/types";
 
 export const rootReducer = (state, action) => {
     switch (action.type) {
@@ -36,6 +36,10 @@ export const rootReducer = (state, action) => {
 
         case CHANGE_TITLE: {
             return { ...state, title: action.payload}
+        }
+
+        case UPDATE_DATE: {
+            return { ...state, date: new Date().toJSON() }
         }
 
         default: return state

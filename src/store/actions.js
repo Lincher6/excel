@@ -1,4 +1,4 @@
-import {APPLY_STYLES, CHANGE_INPUT, CHANGE_STYLES, CHANGE_TITLE, CREATE_TABLE} from "@/store/types";
+import {APPLY_STYLES, CHANGE_INPUT, CHANGE_STYLES, CHANGE_TITLE, CREATE_TABLE, UPDATE_DATE} from "@/store/types";
 
 export const createTable = payload => {
     return {
@@ -32,5 +32,11 @@ export const changeTitle = payload => {
     return {
         type: CHANGE_TITLE,
         payload
+    }
+}
+
+export const updateDate = () => {
+    return {
+        type: UPDATE_DATE
     }
 }
