@@ -1,4 +1,4 @@
-import {storage} from "@core/utils";
+import {clone} from "@core/utils";
 import {defaultStyles, defaultTitle} from "@/constants";
 
 const defaultState = {
@@ -9,6 +9,9 @@ const defaultState = {
     tableData: {},
     currentValue: '',
     currentStyles: defaultStyles,
+    date: new Date().toJSON()
 }
 
-export const initialState = storage('data') || defaultState
+export const normalizeInitialState = state => {
+    return state ? state : clone(defaultState)
+}

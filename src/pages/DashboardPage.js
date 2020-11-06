@@ -1,16 +1,24 @@
 import {Page} from "@/pages/Page";
 import {$} from "@core/dom";
+import {storage} from "@core/utils";
 
 export class DashboardPage extends Page {
+    count = 1
 
-    toHtml(element) {
+    toHtml = (table) => {
+        const tableData = storage(table)
+        const number = table.split(':')[1]
+        const date = new Date(tableData.date)
+        const title = tableData.title !== 'Новая таблица' ? tableData.title : `${tableData.title} ${this.count++}`
+
         return `
             <li class="db__record">
-                <a href="#">
-                    Номер 1
+                <a href="#excel/${number}">
+                    ${title}
                 </a>
                 <strong>
-                    12.12.2020
+                    ${date.toLocaleDateString()}&nbsp;&nbsp;&nbsp;
+                    ${date.toLocaleTimeString()}
                 </strong>
             </li>
         `
@@ -30,6 +38,12 @@ export class DashboardPage extends Page {
     }
 
     createTableList() {
+        const tables = this.getTables()
+
+        if (tables.length === 0) {
+            return `<p class="db__empty">Вы пока не создали ни одной таблицы</p>`
+        }
+
         return `
             <div class="db__list-header">
                 <span>Название</span>
@@ -37,7 +51,7 @@ export class DashboardPage extends Page {
             </div>
 
             <ul class="db__list">
-                ${this.getTables().map(this.toHtml).join('')}
+                ${tables.map(this.toHtml).join('')}
             </ul>
         `
     }

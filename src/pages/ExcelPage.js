@@ -1,23 +1,23 @@
 import {Page} from "@/pages/Page";
 import {createStore} from "@core/createStore";
 import {rootReducer} from "@/store/rootReducer";
-import {initialState} from "@/store/initialState";
 import {Excel} from "@/components/excel/Excel";
 import {Header} from "@/components/header/Header";
 import {Toolbar} from "@/components/toolbar/Toolbar";
 import {Formula} from "@/components/formula/Formula";
 import {Table} from "@/components/table/Table";
-import {debounce, storage} from "@core/utils";
-import {ActiveRoute} from "@core/Routes/ActiveRoute";
+import {debounce, getTableName, storage} from "@core/utils";
+import {normalizeInitialState} from "@/store/initialState";
 
 export class ExcelPage extends Page {
 
     getRoot() {
+        const initialState = normalizeInitialState(storage(getTableName()))
+
         const store = createStore(rootReducer, initialState)
-        const tableName = ActiveRoute.params[1]
 
         const stateListener = state => {
-            storage(`excel:${tableName}`, state)
+            storage(getTableName(), state)
         }
 
         store.subscribe(debounce(stateListener, 500))

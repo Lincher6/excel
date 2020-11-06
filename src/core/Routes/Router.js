@@ -9,7 +9,7 @@ export class Router {
 
         this.$placeholder = $(selector)
         this.routes = routes
-        this.page
+        this.page = null
 
         this.changePageHandler = this.changePageHandler.bind(this)
 

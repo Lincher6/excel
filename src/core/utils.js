@@ -1,3 +1,4 @@
+import {ActiveRoute} from "@core/Routes/ActiveRoute";
 
 export const capitalize = (staring) => {
     if (typeof staring !== 'string') {
@@ -75,4 +76,16 @@ export const parse = value => {
         }
     }
     return value
+}
+
+export const getTableName = () => {
+    return `excel:${ActiveRoute.params[1] ? ActiveRoute.params[1] : Date.now().toString()}`
+}
+
+export const clone = obj => {
+    return JSON.parse(JSON.stringify(obj))
+}
+
+export const preventDefault = e => {
+    e.preventDefault()
 }

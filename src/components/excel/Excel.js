@@ -1,6 +1,8 @@
  import { $ } from "@core/dom"
  import {Emitter} from "@core/Emitter";
  import {StoreSubscriber} from "@/store/StoreSubscriber";
+ import {updateDate} from "@/store/actions";
+ import {preventDefault} from "@core/utils";
 
 export class Excel {
     constructor(options) {
@@ -32,6 +34,11 @@ export class Excel {
     }
 
     init() {
+        if (process.env.NODE_ENV === 'production') {
+            document.addEventListener('contextmenu', preventDefault)
+        }
+
+        this.store.dispatch(updateDate())
         this.components.forEach(component => { component.init() })
         this.storeSubscriber.subscribeComponents(this.components)
     }
