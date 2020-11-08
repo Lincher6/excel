@@ -3,7 +3,8 @@
   "env": {
     "es6": true,
     "browser": true,
-    "node": true
+    "node": true,
+    "jest/globals": true
   },
   "rules": {
     "semi": "off",
@@ -23,6 +24,7 @@
     "max-len": "off",
     "no-invalid-this": "off"
   },
+  "plugins": ["jest"],
   "extends": [
     "eslint:recommended",
     "google"

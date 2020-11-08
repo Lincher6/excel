@@ -1,13 +1,13 @@
 export const createStore = (rootReducer, initialState = {}) => {
     let state = rootReducer(initialState, { type: '__INIT__' })
-    const listeners = []
+    let listeners = []
 
     return {
         subscribe(fn) {
             listeners.push(fn)
             return {
                 unsubscribe() {
-                    listeners.filter(listener => listener !== fn )
+                    listeners = listeners.filter(listener => listener !== fn)
                 }
             }
         },
